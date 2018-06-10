@@ -1,18 +1,31 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 
+app.use(bodyParser.json());
+//app.use(bodyParser.urle);
+
 app.use((req, res, next) => {
+  //res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');
   res.setHeader('Access-Control-Allow-Origin','*');
-  res.setHeader('Access-Control-Allow-Header','Origin',
-    'Origin',
-    'Content-Type',
-    'Accept');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin , Content-Type, X-Requested-With ,Accept');
     res.setHeader('GET','POST','PATCH','DELETE','OPTIONS');
     next();
 });
 
+app.post('/api/posts', (req,res,next) => {
+  //console.log('add nerw post');
+  const post = req.body;
+  console.log(post);
+  res.status(201).json({
+    message: 'Post added successfully'
+  });
+});
 
-app.use('/api/posts',(req,res, next) => {
+app.get('/api/posts',(req,res, next) => {
   //res.send('hello from express');
   const posts = [
     {
