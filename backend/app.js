@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const Post = require("./models/post.");
+const postsRoutes = require("./routes/posts");
 
 const app = express();
 mongoose
@@ -16,7 +16,6 @@ mongoose
   });
 
 app.use(bodyParser.json());
-//app.use(bodyParser.urle);
 
 app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');
@@ -29,91 +28,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  //console.log('add nerw post');
-  // const post = req.body;
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post
-    .save()
-    //console.log(post);
-    .then(createdPost => {
-      console.log(createdPost);
-      res.status(201).json({
-        message: "Post added successfully",
-        newid: createdPost._id
-      });
-    });
-});
-
-app.get("/api/posts/:id", (req, res, next) => {
-  Post.findById(req.params.id).then(post => {
-    if(post) {
-      res.status(200).json({message: 'updated successfully',post:post});
-    } else {
-      res.status(404).json({message: 'post not found',post:null});
-    }
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-  //res.send('hello from express');
-  // const posts = [
-  //   {
-  //     id: "1",
-  //     title: "title 1",
-  //     content: "content 1"
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "title 2",
-  //     content: "content 3"
-  //   }
-  // ];
-  Post.find().then(files => {
-    console.log(files);
-    res.status(200).json({
-      message: "fetch from service",
-      posts: files
-    });
-  });
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  console.log("***********Delete****************");
-  console.log("pased id: ", req.params.id);
-  Post.deleteOne({ _id: req.params.id })
-    .then(result => {
-      //console.log(result);
-      res.status(200).json({ message: "post deleted" });
-    })
-    .catch(err => {
-      console.log("**************Error-Start***************");
-      console.log(err);
-      console.log("**************Error-End***************");
-    });
-  //console.log(req.body.id);
-});
-
-app.put("/api/posts/:id", (req, res, next) => {
-  console.log("***********EDIT****************");
-  console.log("pased id: ", req.params.id);
-  const post = new Post({
-    _id: req.params.id,
-    title: req.body.title,
-    content: req.body.body,
-  });
-  Post.updateOne({ _id: req.params.id }, post)
-    .then(result => {
-      res.status(200).json({ message: "post updated" });
-    })
-    .catch(err => {
-      console.log("**************Update-Error-Start***************");
-      console.log(err);
-      console.log("**************Update-Error-End***************");
-    });
-});
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
