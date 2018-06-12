@@ -11,8 +11,8 @@ mongoose
   .then(() => {
     console.log("db connected succesfullt");
   })
-  .catch(() => {
-    console.log("db connected failed");
+  .catch((err) => {
+    console.log("db connected failed",err);
   });
 
 app.use(bodyParser.json());
@@ -46,6 +46,16 @@ app.post("/api/posts", (req, res, next) => {
         newid: createdPost._id
       });
     });
+});
+
+app.get("/api/posts/:id", (req, res, next) => {
+  Post.findById(req.params.id).then(post => {
+    if(post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({message: 'post not found'});
+    }
+  });
 });
 
 app.get("/api/posts", (req, res, next) => {
@@ -86,4 +96,24 @@ app.delete("/api/posts/:id", (req, res, next) => {
     });
   //console.log(req.body.id);
 });
+
+app.put("/api/posts/:id", (req, res, next) => {
+  console.log("***********EDIT****************");
+  console.log("pased id: ", req.params.id);
+  const post = new Post({
+    _id: req.params.id,
+    title: req.body.title,
+    content: req.body.body,
+  });
+  Post.updateOne({ _id: req.params.id }, post)
+    .then(result => {
+      res.status(200).json({ message: "post updated" });
+    })
+    .catch(err => {
+      console.log("**************Update-Error-Start***************");
+      console.log(err);
+      console.log("**************Update-Error-End***************");
+    });
+});
+
 module.exports = app;

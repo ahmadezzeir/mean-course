@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import {  Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { Post } from "../post.model";
-import { PostsService } from "../posts.service";
+import { Post } from '../post.model';
+import { PostsService } from '../posts.service';
 
 @Component({
-  selector: "app-post-list",
-  templateUrl: "./post-list.component.html",
-  styleUrls: ["./post-list.component.css"]
+  selector: 'app-post-list',
+  templateUrl: './post-list.component.html',
+  styleUrls: ['./post-list.component.css']
 })
 export class PostListComponent implements OnInit, OnDestroy {
   // posts = [
@@ -18,7 +19,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   posts: Post[] = [];
   private postsSub: Subscription;
 
-  constructor(public postsService: PostsService) {}
+  constructor(private postsService: PostsService,
+    private router: Router) {}
 
   ngOnInit() {
     this.postsService.getPosts();
@@ -33,7 +35,12 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(id) {
-    console.log("id",id);
+    console.log('id', id);
     this.postsService.deletePost(id);
   }
+
+  // onEdit(id) {
+  //   console.log('id', id);
+  //   this.router.navigate('edit',id);
+  // }
 }
