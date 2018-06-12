@@ -14,8 +14,8 @@ export class PostsService {
     // return { ...this.posts.find(post => post.id === id) };
     return this.httpClient
     .get<{ message: string; posts: any }>('http://localhost:3000/api/posts/' + id)
-    .subscribe(post => {
-      this.posts = transformedPosts;
+    .subscribe(res => {
+      this.posts = res.posts;
       // console.log(postData);
       this.postsSubject.next([...this.posts]);
     });
