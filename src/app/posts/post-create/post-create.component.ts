@@ -1,4 +1,4 @@
-import { OnInit,Component } from "@angular/core";
+import { OnInit, Component } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { PostsService } from "../posts.service";
@@ -18,7 +18,7 @@ export class PostCreateComponent implements OnInit {
   public post: Post;
   isLoading: boolean;
   form: FormGroup;
-
+  imagePreview: string;
   constructor(
     public postsService: PostsService,
     private activatedRoute: ActivatedRoute,
@@ -30,7 +30,8 @@ export class PostCreateComponent implements OnInit {
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)]
       }),
-      content: new FormControl(null, { validators: [Validators.required] })
+      content: new FormControl(null, { validators: [Validators.required] }),
+      image: new FormControl(null, { validators: [Validators.required] })
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
@@ -45,7 +46,6 @@ export class PostCreateComponent implements OnInit {
           console.log(postData);
           this.isLoading = false;
 
-
           this.post = {
             id: postData.post._id,
             title: postData.post.title,
@@ -56,7 +56,7 @@ export class PostCreateComponent implements OnInit {
           this.form.setValue({
             title: this.post.title,
             content: this.post.content
-          })
+          });
         });
       } else {
         this.mode = "create";
@@ -64,21 +64,28 @@ export class PostCreateComponent implements OnInit {
       }
     });
   }
-
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.form.patchValue({ image: file });
+    this.form.get("image").updateValueAndValidity();
+    //console.log(file);
+    //console.log(this.form);
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      this.imagePreview = fileReader.result;
+    };
+    fileReader.readAsDataURL(file);
+  }
   onSavePost() {
     // console.log('***************');
     // console.log(this.form);
     // console.log('***************');
     if (this.form.invalid) {
       return;
-
     }
     this.isLoading = true;
     if (this.mode === "create") {
-      this.postsService.addPost(
-        this.form.value.title,
-        this.form.value.content
-      );
+      this.postsService.addPost(this.form.value.title, this.form.value.content);
     } else {
       console.log(this.form.value.content);
 

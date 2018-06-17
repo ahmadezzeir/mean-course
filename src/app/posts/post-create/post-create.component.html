@@ -7,9 +7,11 @@
     </mat-form-field>
     <div>
       <button type="button" mat-stroked-button (click)="filePicker.click()">Image Picker</button>
-      <input type="file" #filePicker>
+      <input type="file" #filePicker (change)="onImagePicked($event)">
     </div>
-
+    <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview">
+      <img [src]="imagePreview" [alt]="form.value.title">
+    </div>
     <mat-form-field>
       <textarea matInput rows="4" formControlName="content" placeholder="Post Content"></textarea>
       <mat-error *ngIf="form.get('content').invalid">Please enter a post title.</mat-error>
