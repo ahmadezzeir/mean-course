@@ -1,6 +1,5 @@
-import { OnInit } from "@angular/core";
-import { Component } from "@angular/core";
-import { NgForm } from "@angular/forms";
+import { OnInit,Component } from "@angular/core";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
@@ -9,15 +8,17 @@ import { Post } from "../post.model";
 @Component({
   selector: "app-post-create",
   templateUrl: "./post-create.component.html",
-  styleUrls: ['./post-create.component.css']
+  styleUrls: ["./post-create.component.css"]
 })
 export class PostCreateComponent implements OnInit {
-  enteredTitle = '';
-  enteredContent = '';
-  private mode = 'create';
+  enteredTitle = "";
+  enteredContent = "";
+  private mode = "create";
   private id: string;
   public post: Post;
-  private isLoading: boolean;
+  isLoading: boolean;
+  form: FormGroup;
+
   constructor(
     public postsService: PostsService,
     private activatedRoute: ActivatedRoute,
@@ -25,38 +26,67 @@ export class PostCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has("postId")) {
-        this.mode = "edit";
-        this.id = paramMap.get("postId");
-        this.isLoading = true;
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)]
+      }),
+      content: new FormControl(null, { validators: [Validators.required] })
+    });
 
-        this.postsService.getPost(this.id).subscribe(postData => {
+    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+      //console.log(paramMap.has("id"));
+
+      if (paramMap.has("id")) {
+        this.mode = "edit";
+        this.id = paramMap.get("id");
+        this.isLoading = true;
+        //console.log(this.id);
+        this.postsService.getPost(this.id).subscribe((postData: any) => {
+          console.log(postData);
           this.isLoading = false;
-          this.post = {id: postData._id, title: postData.title, content: postData.content};
+
+
+          this.post = {
+            id: postData.post._id,
+            title: postData.post.title,
+            content: postData.post.content
+          };
+          console.log(this.post);
+
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content
+          })
         });
       } else {
-        this.mode = 'create';
+        this.mode = "create";
         this.id = null;
       }
     });
   }
 
-  onSavePost(form: NgForm) {
-    if (form.invalid) {
+  onSavePost() {
+    // console.log('***************');
+    // console.log(this.form);
+    // console.log('***************');
+    if (this.form.invalid) {
       return;
+
     }
     this.isLoading = true;
-    if(this.mode === 'create') {
-      this.postsService.addPost(form.value.title, form.value.content);
+    if (this.mode === "create") {
+      this.postsService.addPost(
+        this.form.value.title,
+        this.form.value.content
+      );
     } else {
-      this.post.content = form.value.content;
-      this.post.title = form.value.title;
+      console.log(this.form.value.content);
+
+      this.post.content = this.form.value.content;
+      this.post.title = this.form.value.title;
       this.postsService.updatePost(this.post);
     }
-    form.resetForm();
+    this.form.reset();
     // this.router.navigateByUrl('');
   }
-
-
 }

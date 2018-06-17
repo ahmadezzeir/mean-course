@@ -79,6 +79,8 @@ export class PostsService {
   }
 
   updatePost(post: Post) {
+    //console.log('service: ',post);
+
     this.httpClient
       .put('http://localhost:3000/api/posts/' + post.id, post)
       .subscribe(response => {

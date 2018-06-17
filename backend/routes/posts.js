@@ -61,7 +61,7 @@ router.put("/:id", (req, res, next) => {
   const post = new Post({
     _id: req.params.id,
     title: req.body.title,
-    content: req.body.body,
+    content: req.body.content,
   });
   Post.updateOne({ _id: req.params.id }, post)
     .then(result => {
