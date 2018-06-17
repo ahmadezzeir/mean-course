@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { Post } from "../post.model";
+import { mimeType } from './mime-type.validator';
 
 @Component({
   selector: "app-post-create",
@@ -31,11 +32,11 @@ export class PostCreateComponent implements OnInit {
         validators: [Validators.required, Validators.minLength(3)]
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
-      image: new FormControl(null, { validators: [Validators.required] })
+      image: new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] })
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
-      //console.log(paramMap.has("id"));
+      console.log(paramMap);
 
       if (paramMap.has("id")) {
         this.mode = "edit";
