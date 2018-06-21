@@ -81,12 +81,17 @@ export class PostCreateComponent implements OnInit {
     // console.log('***************');
     // console.log(this.form);
     // console.log('***************');
+
+    //client side validation
     if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.mode === "create") {
-      this.postsService.addPost(this.form.value.title, this.form.value.content);
+      this.postsService.addPost(
+        this.form.value.title,
+        this.form.value.content,
+        this.form.value.image);
     } else {
       console.log(this.form.value.content);
 

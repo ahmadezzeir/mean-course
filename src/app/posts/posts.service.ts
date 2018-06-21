@@ -29,10 +29,13 @@ export class PostsService {
       .pipe(
         map(postData => {
           return postData.posts.map(post => {
+            console.log(post);
+
             return {
               title: post.title,
               content: post.content,
-              id: post._id
+              id: post._id,
+              imagePath: post.imagePath
             };
           });
         })
@@ -48,18 +51,30 @@ export class PostsService {
     return this.postsSubject.asObservable();
   }
 
-  addPost(title: string, content: string) {
-    const post: Post = { id: null, title: title, content: content };
+  addPost(title: string, content: string, image: File) {
+    const postFormData = new FormData();
+    postFormData.append('title', title);
+    postFormData.append('content', content);
+    postFormData.append('image', image, title);
+
+    // const post: Post = { id: null, title: title, content: content };
     this.httpClient
-      .post<{ message: string; newid: string }>(
+      .post<{ message: string; post: Post }>(
         'http://localhost:3000/api/posts',
-        post
+        //post
+        postFormData
       )
       .subscribe(res => {
-        console.log(res);
-        post.id = res.newid;
+        // console.log(res);
+        const post : Post = {
+          id: res.post.id,
+          title: res.post.title, //title parameter
+          content: res.post.content, // content parameter
+          imagePath: res.post.imagePath
+        }
+        //post.id = res.newid;
         this.posts.push(post);
-        console.log(post);
+        // console.log(post);
         this.postsSubject.next([...this.posts]);
         this.router.navigate(['/']);
       });
