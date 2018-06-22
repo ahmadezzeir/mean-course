@@ -58,10 +58,11 @@ router.post("", multer({storage:multerStorage}).single('image'), (req, res, next
 });
 
 router.get("/:id", (req, res, next) => {
+
   Post.findById(req.params.id).then(post => {
     if(post) {
       res.status(200).json({message: 'updated successfully',post:post});
-      console.log(post);
+      //console.log(post);
     } else {
       res.status(404).json({message: 'post not found',post:null});
     }
@@ -69,11 +70,34 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.get("", (req, res, next) => {
-  Post.find().then(posts => {
-    console.log(posts);
+  console.log(req.query);
+  const pageSize = +req.query.pageSize;
+  const currentPage = +req.query.currentPage;
+  const query = Post.find();
+  let fetchPosts;
+  if(pageSize && currentPage) {
+    query.skip(pageSize * (currentPage - 1))
+    .limit(pageSize);
+  }
+  query.then(posts => {
+    fetchPosts = posts
+    return Post.count();
+  })
+
+  // query.then(posts => {
+  //   // console.log(posts);
+  //   res.status(200).json({
+  //     message: "fetch from service",
+  //     posts: posts
+  //   });
+  // });
+
+  .then(count => {
+    console.log('count',count);
     res.status(200).json({
       message: "fetch from service",
-      posts: posts
+      posts: fetchPosts,
+      count: count
     });
   });
 });
