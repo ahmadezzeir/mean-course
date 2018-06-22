@@ -1,9 +1,9 @@
+import { Post } from './../post.model';
 import { OnInit, Component } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { Post } from "../post.model";
 import { mimeType } from './mime-type.validator';
 
 @Component({
@@ -36,7 +36,7 @@ export class PostCreateComponent implements OnInit {
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
-      console.log(paramMap);
+      // console.log(paramMap);
 
       if (paramMap.has("id")) {
         this.mode = "edit";
@@ -50,13 +50,15 @@ export class PostCreateComponent implements OnInit {
           this.post = {
             id: postData.post._id,
             title: postData.post.title,
-            content: postData.post.content
+            content: postData.post.content,
+            imagePath: postData.post.imagePath
           };
           console.log(this.post);
 
           this.form.setValue({
             title: this.post.title,
-            content: this.post.content
+            content: this.post.content,
+            image: this.post.imagePath
           });
         });
       } else {
@@ -93,10 +95,11 @@ export class PostCreateComponent implements OnInit {
         this.form.value.content,
         this.form.value.image);
     } else {
-      console.log(this.form.value.content);
+      // console.log(this.form.value.content);
 
       this.post.content = this.form.value.content;
       this.post.title = this.form.value.title;
+      this.post.imagePath = this.form.value.image;
       this.postsService.updatePost(this.post);
     }
     this.form.reset();

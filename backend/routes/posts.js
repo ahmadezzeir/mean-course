@@ -61,6 +61,7 @@ router.get("/:id", (req, res, next) => {
   Post.findById(req.params.id).then(post => {
     if(post) {
       res.status(200).json({message: 'updated successfully',post:post});
+      console.log(post);
     } else {
       res.status(404).json({message: 'post not found',post:null});
     }
@@ -91,13 +92,22 @@ router.delete("/:id", (req, res, next) => {
     });
 });
 
-router.put("/:id", (req, res, next) => {
-  console.log("***********EDIT****************");
-  console.log("pased id: ", req.params.id);
+router.put("/:id",multer({storage:multerStorage}).single('image'), (req, res, next) => {
+
+  console.log('incoming request',req.file);
+  // console.log("***********EDIT****************");
+  // console.log("pased id: ", req.params.id);
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + "://" + req.get("host");
+    imagePath = url + "/images/" + req.file.filename
+  }
+
   const post = new Post({
     _id: req.params.id,
     title: req.body.title,
     content: req.body.content,
+    imagePath: imagePath
   });
   Post.updateOne({ _id: req.params.id }, post)
     .then(result => {
