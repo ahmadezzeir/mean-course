@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -11,7 +12,10 @@ export class AuthService {
   private isUserAuthenticated = false;
   private isUserAuthenticatedSubject = new Subject<boolean>();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router
+  ) { }
 
   getIsUserAuthenticatedSubject(): Observable<boolean> {
     return this.isUserAuthenticatedSubject.asObservable();
@@ -29,7 +33,8 @@ export class AuthService {
 
     this.httpClient.post("http://localhost:3000/api/users/signup", user)
     .subscribe(res => {
-      console.log(res);
+      // console.log(res);
+      this.router.navigate(['/login']);
     })
   }
 
@@ -41,6 +46,7 @@ export class AuthService {
       if(this.token) {
         this.isUserAuthenticated = true;
         this.isUserAuthenticatedSubject.next(true);
+        this.router.navigate(['/']);
       }
     });
   }
@@ -49,6 +55,7 @@ export class AuthService {
     this.token = null;
     this.isUserAuthenticated = false;
     this.isUserAuthenticatedSubject.next(false);
+    this.router.navigate(['/login']);
   }
 
 
