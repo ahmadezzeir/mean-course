@@ -1,8 +1,11 @@
 
 const express = require('express');
 const Post = require("../models/post");
-const router = express.Router();
+const checkAuth = require('../middelware/check-auth');
 const multer = require("multer");
+
+const router = express.Router();
+
 const MIME_TYPE_MAP = {
   'image/png' : 'png',
   'image/jpeg': 'jpg',
@@ -26,7 +29,7 @@ const multerStorage = multer.diskStorage({
 
 });
 
-router.post("", multer({storage:multerStorage}).single('image'), (req, res, next) => {
+router.post("",checkAuth, multer({storage:multerStorage}).single('image'), (req, res, next) => {
   console.log('start')
   const url = req.protocol + "://" + req.get("host");
   console.log(url);
@@ -57,7 +60,7 @@ router.post("", multer({storage:multerStorage}).single('image'), (req, res, next
     });
 });
 
-router.get("/:id", (req, res, next) => {
+router.get("/:id",checkAuth, (req, res, next) => {
 
   Post.findById(req.params.id).then(post => {
     if(post) {
@@ -116,7 +119,7 @@ router.delete("/:id", (req, res, next) => {
     });
 });
 
-router.put("/:id",multer({storage:multerStorage}).single('image'), (req, res, next) => {
+router.put("/:id",checkAuth,multer({storage:multerStorage}).single('image'), (req, res, next) => {
 
   console.log('incoming request',req.file);
   // console.log("***********EDIT****************");
