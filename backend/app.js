@@ -1,8 +1,12 @@
+//libraries
 const path = require("path"); // handels paths on all OS systems
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+
+//Routes
 const postsRoutes = require("./routes/posts");
+const usersRoutes = require("./routes/users");
 
 
 
@@ -10,7 +14,7 @@ const postsRoutes = require("./routes/posts");
 const app = express();
 mongoose
   .connect(
-    "mongodb://aezzeir:7BrjJm8WfU4urxrm@cluster0-shard-00-00-azswa.mongodb.net:27017,cluster0-shard-00-01-azswa.mongodb.net:27017,cluster0-shard-00-02-azswa.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+    "mongodb://aezzeir:7BrjJm8WfU4urxrm@cluster0-shard-00-00-azswa.mongodb.net:27017,cluster0-shard-00-01-azswa.mongodb.net:27017,cluster0-shard-00-02-azswa.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
   )
   .then(() => {
     console.log("db connected succesfullt");
@@ -35,5 +39,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/posts", postsRoutes);
+app.use("/api/users", usersRoutes);
 
 module.exports = app;
