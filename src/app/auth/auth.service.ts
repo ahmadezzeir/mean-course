@@ -8,12 +8,21 @@ import { User } from './user.model';
 })
 export class AuthService {
   private token;
+  private isUserAuthenticated = false;
   private isUserAuthenticatedSubject = new Subject<boolean>();
 
   constructor(private httpClient: HttpClient) { }
 
   getIsUserAuthenticatedSubject(): Observable<boolean> {
     return this.isUserAuthenticatedSubject.asObservable();
+  }
+
+  getIsUserAuthenticated(): boolean {
+    return this.isUserAuthenticated;
+  }
+
+  getToken(): string {
+    return this.token;
   }
 
   createUser(user: User) {
@@ -29,13 +38,18 @@ export class AuthService {
     .subscribe((res:any) => {
        console.log('AuthService-login',res);
       this.token = res.token;
-      this.isUserAuthenticatedSubject.next(true);
-      // console.log('AuthService-login-token',  this.token);
-
+      if(this.token) {
+        this.isUserAuthenticated = true;
+        this.isUserAuthenticatedSubject.next(true);
+      }
     });
   }
 
-  getToken(): string {
-    return this.token;
+  logout() {
+    this.token = null;
+    this.isUserAuthenticated = false;
+    this.isUserAuthenticatedSubject.next(false);
   }
+
+
 }

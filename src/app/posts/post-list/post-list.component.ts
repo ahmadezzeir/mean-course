@@ -1,3 +1,4 @@
+import { AuthService } from './../../auth/auth.service';
 import {  Router } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -17,21 +18,28 @@ export class PostListComponent implements OnInit, OnDestroy {
   //   { title: "Second Post", content: "This is the second post's content" },
   //   { title: "Third Post", content: "This is the third post's content" }
   // ];
+  // isUserAuthenticatedSubject = false;
+  isUserAuthenticated = false;
   posts: Post[] = [];
-  private postsSub: Subscription;
-  private isLoading: boolean;
+  postsSubscription: Subscription;
+  isUserAuthenticatedSubscription: Subscription;
+  public isLoading: boolean;
+  //paging
   pageSize = 2;
   total = 10;
   currentPage: number;
   pageSizeOptions = [1 ,2 ,5, 10, 20 ];
-  constructor(private postsService: PostsService,
+  ////
+  constructor(
+    private postsService: PostsService,
+    private authService: AuthService,
     private router: Router) {}
 
   ngOnInit() {
     this.isLoading = true;
     this.currentPage = 1;
     this.postsService.getPosts(this.pageSize, this.currentPage);
-    this.postsSub = this.postsService.getPostUpdateListener()
+    this.postsSubscription = this.postsService.getPostUpdateListener()
       .subscribe((data: {posts: Post[], total: number}) => {
         console.log(data);
 
@@ -39,10 +47,17 @@ export class PostListComponent implements OnInit, OnDestroy {
         this.posts = data.posts;
         this.total = data.total;
       });
+      this.isUserAuthenticated = this.authService.getIsUserAuthenticated();
+      this.isUserAuthenticatedSubscription = this.authService.getIsUserAuthenticatedSubject()
+      .subscribe((isUserAuthenticated: boolean) => {
+        this.isUserAuthenticated = isUserAuthenticated;
+      })
+
   }
 
   ngOnDestroy() {
-    this.postsSub.unsubscribe();
+    this.postsSubscription.unsubscribe();
+    this.isUserAuthenticatedSubscription.unsubscribe();
   }
 
   onDelete(id) {
