@@ -105,7 +105,7 @@ router.get("", (req, res, next) => {
   });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id",checkAuth, (req, res, next) => {
   console.log("***********Delete****************");
   console.log("pased id: ", req.params.id);
   Post.deleteOne({ _id: req.params.id })
