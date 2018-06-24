@@ -9,6 +9,8 @@ import { User } from './user.model';
 })
 export class AuthService {
   private token;
+  private expiresIn = 0;
+  private tokenTimer: any;
   private isUserAuthenticated = false;
   private isUserAuthenticatedSubject = new Subject<boolean>();
 
@@ -41,9 +43,16 @@ export class AuthService {
   login(user: User) {
     this.httpClient.post("http://localhost:3000/api/users/login", user)
     .subscribe((res:any) => {
-       console.log('AuthService-login',res);
-      this.token = res.token;
-      if(this.token) {
+       //console.log('AuthService-login',res);
+
+      if(res.token) {
+        // console.log('there is a token');
+        this.token = res.token;
+        this.expiresIn = res.expiresIn;
+        // console.log('AuthService-login-expiresIn',this.expiresIn);
+        this.tokenTimer = setTimeout(()=> {
+          this.logout();
+        }, this.expiresIn);
         this.isUserAuthenticated = true;
         this.isUserAuthenticatedSubject.next(true);
         this.router.navigate(['/']);
