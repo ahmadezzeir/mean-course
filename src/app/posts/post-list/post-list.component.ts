@@ -19,11 +19,13 @@ export class PostListComponent implements OnInit, OnDestroy {
   //   { title: "Third Post", content: "This is the third post's content" }
   // ];
   // isUserAuthenticatedSubject = false;
+  userId: string;
   isUserAuthenticated = false;
   posts: Post[] = [];
   postsSubscription: Subscription;
   isUserAuthenticatedSubscription: Subscription;
   public isLoading: boolean;
+
   //paging
   pageSize = 2;
   total = 10;
@@ -39,6 +41,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = 1;
     this.postsService.getPosts(this.pageSize, this.currentPage);
+    this.userId = this.authService.getUserId();
     this.postsSubscription = this.postsService.getPostUpdateListener()
       .subscribe((data: {posts: Post[], total: number}) => {
         // console.log(data);
@@ -50,6 +53,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.isUserAuthenticatedSubscription = this.authService.getIsUserAuthenticatedSubject()
       .subscribe((isUserAuthenticated: boolean) => {
         this.isUserAuthenticated = isUserAuthenticated;
+        this.userId = this.authService.getUserId();
       })
 
   }

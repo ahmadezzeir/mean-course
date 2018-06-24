@@ -100,7 +100,7 @@ router.get("", (req, res, next) => {
 
   .then(count => {
     //console.log('count',count);
-    console.log('backend-route-post:fetchPosts',fetchPosts);
+    //console.log('backend-route-post:fetchPosts',fetchPosts);
     res.status(200).json({
       message: "fetch from service",
       posts: fetchPosts,
@@ -112,9 +112,13 @@ router.get("", (req, res, next) => {
 router.delete("/:id",checkAuth, (req, res, next) => {
   // console.log("***********Delete****************");
   // console.log("pased id: ", req.params.id);
-  Post.deleteOne({ _id: req.params.id })
+  Post.deleteOne({ _id: req.params.id, createdBy: req.userData.userID })
     .then(result => {
-      res.status(200).json({ message: "post deleted" });
+      if(result.n > 0) {
+        res.status(200).json({ message: "post deleted" });
+      } else {
+        res.status(401).json({ message: "post not found" });
+      }
     })
     .catch(err => {
       console.log("**************Error-Start***************");
@@ -142,9 +146,16 @@ router.put("/:id",checkAuth,multer({storage:multerStorage}).single('image'), (re
     updatedBy: req.userData.userID,
     updated: new Date(),
   });
-  Post.updateOne({ _id: req.params.id }, post)
+  Post.updateOne({ _id: req.params.id, createdBy: req.userData.userID }, post)
     .then(result => {
-      res.status(200).json({ message: "post updated" });
+      console.log(result);
+      if(result.nModified > 0) {
+         console.log('200');
+        res.status(200).json({ message: "post updated" });
+      } else {
+         console.log('401');
+        res.status(401).json({ message: "post not found" });
+      }
     })
     .catch(err => {
       console.log("**************Update-Error-Start***************");

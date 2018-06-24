@@ -7,8 +7,8 @@ const postSchema = mongoose.Schema({
   createdBy: {type: mongoose.Schema.Types.ObjectId, ref:"User", required:true},
   created: {type: Date, required:true},
 
-  updatedBy: {type: mongoose.Schema.Types.ObjectId, ref:"User", required:true},
-  updated: {type: Date, required:true},
+  updatedBy: {type: mongoose.Schema.Types.ObjectId, ref:"User",},
+  updated: {type: Date, },
 });
 
 module.exports = mongoose.model('Post', postSchema);

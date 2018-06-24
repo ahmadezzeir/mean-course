@@ -8,9 +8,10 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class AuthService {
+  private userId: string;
   private token;
   private expiresInDuration = 0;
-  private tokenTimer: any;
+  // private tokenTimer: any;
   private isUserAuthenticated = false;
   private isUserAuthenticatedSubject = new Subject<boolean>();
 
@@ -31,29 +32,38 @@ export class AuthService {
     return this.token;
   }
 
-  saveAuthData(token: string, expiresIn: Date): void {
+  getUserId(): string {
+    return this.userId;
+  }
+
+  saveAuthData(token: string, expiresIn: Date, userId: string): void {
     localStorage.setItem('token', token);
     localStorage.setItem('expiresIn', expiresIn.toISOString());
+    localStorage.setItem('userId', userId);
   }
 
   getAuthData() : any{
     const token = localStorage.getItem('token');
     const expiresInDate = localStorage.getItem('expiresIn');
+    const userId = localStorage.getItem('userId');
     if(!token || !expiresInDate) {
       return;
     }
     return {
-      token: token, expiresInDate: new Date(expiresInDate)
+      token: token,
+      expiresInDate: new Date(expiresInDate),
+      userId: userId,
     };
   }
 
   clearAuthData(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('expiresIn');
+    localStorage.removeItem('userId');
   }
 
   setAuthTimer(duration: number) {
-    this.tokenTimer = setTimeout(()=> {
+    setTimeout(()=> {
       this.logout();
     }, duration * 1000);
   }
@@ -66,6 +76,7 @@ export class AuthService {
     const now = new Date();
     const expiresInDuration = authData.expiresInDate.getTime() - now.getTime();
     if(expiresInDuration > 0) {
+      this.userId = authData.userId;
       this.token = authData.token;
       this.isUserAuthenticated = true;
       this.isUserAuthenticatedSubject.next(true);
@@ -90,6 +101,7 @@ export class AuthService {
 
       if(res.token) {
         // console.log('there is a token');
+        this.userId = res.userId;
         this.token = res.token;
         this.expiresInDuration = res.expiresIn;
         // console.log('AuthService-login-expiresIn',this.expiresIn);
@@ -98,13 +110,14 @@ export class AuthService {
         this.isUserAuthenticatedSubject.next(true);
         const now = new Date();
         const expiresInDate = new Date(now.getTime() + (this.expiresInDuration * 1000));
-        this.saveAuthData(this.token, expiresInDate);
+        this.saveAuthData(this.token, expiresInDate,this.userId);
         this.router.navigate(['/']);
       }
     });
   }
 
   logout() {
+    this.userId = null;
     this.token = null;
     this.isUserAuthenticated = false;
     this.isUserAuthenticatedSubject.next(false);

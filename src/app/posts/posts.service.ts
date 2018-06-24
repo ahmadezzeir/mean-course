@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
-import { Post } from "./post.model";
+import { Post } from './post.model';
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
@@ -39,7 +39,8 @@ export class PostsService {
                 title: post.title,
                 content: post.content,
                 id: post._id,
-                imagePath: post.imagePath
+                imagePath: post.imagePath,
+                createdBy: post.createdBy,
               };
             }),
             total: postData.count
