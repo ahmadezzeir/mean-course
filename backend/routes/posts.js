@@ -30,21 +30,24 @@ const multerStorage = multer.diskStorage({
 });
 
 router.post("",checkAuth, multer({storage:multerStorage}).single('image'), (req, res, next) => {
-  console.log('start')
+  // console.log('start')
   const url = req.protocol + "://" + req.get("host");
-  console.log(url);
-  console.log(url + "/images/" + req.file.filename);
+  // console.log(url);
+  // console.log(url + "/images/" + req.file.filename);
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + "/images/" + req.file.filename
+    imagePath: url + "/images/" + req.file.filename,
+    createdBy: req.userData.userID,
+    created: new Date(),
   });
-  console.log('*****************');
   console.log(post);
-  console.log('*****************');
+  // console.log('*****************');
+  // console.log(post);
+  // console.log('*****************');
   post.save()
     .then(createdPost => {
-      console.log(createdPost);
+      // console.log(createdPost);
       res.status(201).json({
         message: "Post added successfully",
         // newid: createdPost._id
@@ -96,7 +99,8 @@ router.get("", (req, res, next) => {
   // });
 
   .then(count => {
-    console.log('count',count);
+    //console.log('count',count);
+    console.log('backend-route-post:fetchPosts',fetchPosts);
     res.status(200).json({
       message: "fetch from service",
       posts: fetchPosts,
@@ -106,8 +110,8 @@ router.get("", (req, res, next) => {
 });
 
 router.delete("/:id",checkAuth, (req, res, next) => {
-  console.log("***********Delete****************");
-  console.log("pased id: ", req.params.id);
+  // console.log("***********Delete****************");
+  // console.log("pased id: ", req.params.id);
   Post.deleteOne({ _id: req.params.id })
     .then(result => {
       res.status(200).json({ message: "post deleted" });
@@ -121,7 +125,7 @@ router.delete("/:id",checkAuth, (req, res, next) => {
 
 router.put("/:id",checkAuth,multer({storage:multerStorage}).single('image'), (req, res, next) => {
 
-  console.log('incoming request',req.file);
+  // console.log('incoming request',req.file);
   // console.log("***********EDIT****************");
   // console.log("pased id: ", req.params.id);
   let imagePath = req.body.imagePath;
@@ -134,7 +138,9 @@ router.put("/:id",checkAuth,multer({storage:multerStorage}).single('image'), (re
     _id: req.params.id,
     title: req.body.title,
     content: req.body.content,
-    imagePath: imagePath
+    imagePath: imagePath,
+    updatedBy: req.userData.userID,
+    updated: new Date(),
   });
   Post.updateOne({ _id: req.params.id }, post)
     .then(result => {
