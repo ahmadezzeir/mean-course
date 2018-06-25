@@ -90,11 +90,16 @@ export class AuthService {
     this.httpClient.post("http://localhost:3000/api/users/signup", user)
     .subscribe(res => {
       // console.log(res);
-      this.router.navigate(['/login']);
-    })
+      //this.router.navigate(['/login']);
+      this.login(user);
+    }, error => {
+      this.isUserAuthenticatedSubject.next(false);
+    });
   }
 
   login(user: User) {
+    console.log(user);
+
     this.httpClient.post("http://localhost:3000/api/users/login", user)
     .subscribe((res:any) => {
        //console.log('AuthService-login',res);
@@ -113,7 +118,11 @@ export class AuthService {
         this.saveAuthData(this.token, expiresInDate,this.userId);
         this.router.navigate(['/']);
       }
-    });
+    },
+    error => {
+      this.isUserAuthenticatedSubject.next(false);
+    }
+    );
   }
 
   logout() {

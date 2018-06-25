@@ -1,17 +1,20 @@
 import { Post } from './../post.model';
-import { OnInit, Component } from "@angular/core";
+import { OnInit, Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { mimeType } from './mime-type.validator';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: "app-post-create",
   templateUrl: "./post-create.component.html",
   styleUrls: ["./post-create.component.css"]
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
+
   enteredTitle = "";
   enteredContent = "";
   private mode = "create";
@@ -20,10 +23,12 @@ export class PostCreateComponent implements OnInit {
   isLoading: boolean;
   form: FormGroup;
   imagePreview: string;
+  private authStatusSubscription: Subscription;
+
   constructor(
     public postsService: PostsService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +49,7 @@ export class PostCreateComponent implements OnInit {
         this.isLoading = true;
         //console.log(this.id);
         this.postsService.getPost(this.id).subscribe((postData: any) => {
-          console.log(postData);
+          // console.log(postData);
           this.isLoading = false;
 
           this.post = {
@@ -54,19 +59,26 @@ export class PostCreateComponent implements OnInit {
             imagePath: postData.post.imagePath,
             createdBy: postData.post.createdBy,
           };
-          console.log(this.post);
+          // console.log(this.post);
 
           this.form.setValue({
             title: this.post.title,
             content: this.post.content,
             image: this.post.imagePath
           });
+        }, ()=> {
+          this.isLoading = false;
         });
       } else {
         this.mode = "create";
         this.id = null;
       }
     });
+
+    this.authStatusSubscription = this.authService.getIsUserAuthenticatedSubject()
+      .subscribe(authStatus => {
+          this.isLoading = false;
+      });
   }
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
@@ -105,5 +117,9 @@ export class PostCreateComponent implements OnInit {
     }
     this.form.reset();
     // this.router.navigateByUrl('');
+  }
+
+  ngOnDestroy(): void {
+    this.authStatusSubscription.unsubscribe();
   }
 }

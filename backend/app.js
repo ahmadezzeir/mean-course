@@ -21,6 +21,9 @@ mongoose
   })
   .catch((err) => {
     console.log("db connected failed",err);
+    res.status(500).json({
+      message: "unable to connect to the database"
+    });
   });
 
 app.use(bodyParser.json());

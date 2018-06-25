@@ -60,6 +60,11 @@ router.post("",checkAuth, multer({storage:multerStorage}).single('image'), (req,
           id: createdPost._id
         }
       });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "post not created"
+      });
     });
 });
 
@@ -67,11 +72,16 @@ router.get("/:id",checkAuth, (req, res, next) => {
 
   Post.findById(req.params.id).then(post => {
     if(post) {
-      res.status(200).json({message: 'updated successfully',post:post});
+      res.status(200).json({message: 'post updated successfully',post:post});
       //console.log(post);
     } else {
       res.status(404).json({message: 'post not found',post:null});
     }
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "unable to fetch post"
+    });
   });
 });
 
@@ -106,6 +116,11 @@ router.get("", (req, res, next) => {
       posts: fetchPosts,
       count: count
     });
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "unable to fetch posts"
+    });
   });
 });
 
@@ -115,12 +130,15 @@ router.delete("/:id",checkAuth, (req, res, next) => {
   Post.deleteOne({ _id: req.params.id, createdBy: req.userData.userID })
     .then(result => {
       if(result.n > 0) {
-        res.status(200).json({ message: "post deleted" });
+        res.status(200).json({ message: "post deleted successfully " });
       } else {
         res.status(401).json({ message: "post not found" });
       }
     })
     .catch(err => {
+      res.status(500).json({
+        message: "post not deleted"
+      });
       console.log("**************Error-Start***************");
       console.log(err);
       console.log("**************Error-End***************");
@@ -158,6 +176,9 @@ router.put("/:id",checkAuth,multer({storage:multerStorage}).single('image'), (re
       }
     })
     .catch(err => {
+      res.status(500).json({
+        message: "post not updated"
+      });
       console.log("**************Update-Error-Start***************");
       console.log(err);
       console.log("**************Update-Error-End***************");
