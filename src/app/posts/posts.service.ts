@@ -52,6 +52,10 @@ export class PostsService {
       )
       .subscribe(transformedPosts => {
         this.posts = transformedPosts.posts;
+        if(transformedPosts.posts.length == 0 && currentPage > 0) {
+          currentPage = currentPage - 1;
+          this.getPosts(pageSize, currentPage);
+        }
         // console.log(postData);
         this.postsSubject.next({
           posts: [...this.posts],
