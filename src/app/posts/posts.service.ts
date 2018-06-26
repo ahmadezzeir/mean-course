@@ -4,6 +4,9 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { map } from "rxjs/operators";
 import { Post } from './post.model';
+import { environment } from "../../environments/environment";
+
+const serviceURL = environment.apiURL + 'api/posts';
 
 @Injectable({ providedIn: "root" })
 export class PostsService {
@@ -15,7 +18,7 @@ export class PostsService {
   getPost(id: string) {
     // return { ...this.posts.find(post => post.id === id) };
     return this.httpClient.get<{ _id: string; title: string; content: string }>(
-      "http://localhost:3000/api/posts/" + id
+      serviceURL + "/" + id
     );
     // .subscribe(res => {
     //   this.post = res.post;
@@ -27,7 +30,7 @@ export class PostsService {
     const query = `?pageSize=${pageSize}&currentPage=${currentPage}`;
     this.httpClient
       .get<{ message: string; posts: any; count: number }>(
-        "http://localhost:3000/api/posts" + query
+        serviceURL + query
       )
       .pipe(
         map(postData => {
@@ -70,7 +73,7 @@ export class PostsService {
     // const post: Post = { id: null, title: title, content: content };
     this.httpClient
       .post<{ message: string; post: Post }>(
-        "http://localhost:3000/api/posts",
+        serviceURL,
         //post
         postFormData
       )
@@ -92,7 +95,7 @@ export class PostsService {
 
   deletePost(id: string) {
     return this.httpClient
-      .delete("http://localhost:3000/api/posts/" + id)
+      .delete(serviceURL + "/" + id)
       // .subscribe(() => {
       //   //console.log('deleted: ', id);
       //   // const updatedList = this.posts.filter(post => post.id !== id);
@@ -117,7 +120,7 @@ export class PostsService {
     }
     this.httpClient
       //.put('http://localhost:3000/api/posts/' + post.id, post)
-      .put("http://localhost:3000/api/posts/" + post.id, postFormData)
+      .put(serviceURL + "/" + post.id, postFormData)
       .subscribe(response => {
         // const updatedPosts = [...this.posts];
         // const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);

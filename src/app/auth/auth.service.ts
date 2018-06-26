@@ -1,13 +1,16 @@
+import { environment } from './../../environments/environment';
 import { Router } from '@angular/router';
 import { Subject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { User } from './user.model';
 
+const serviceURL = environment.apiURL + 'api/users';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
   private userId: string;
   private token;
   private expiresInDuration = 0;
@@ -87,7 +90,7 @@ export class AuthService {
 
   createUser(user: User) {
 
-    this.httpClient.post("http://localhost:3000/api/users/signup", user)
+    this.httpClient.post(serviceURL + "/signup", user)
     .subscribe(res => {
       // console.log(res);
       //this.router.navigate(['/login']);
@@ -100,7 +103,7 @@ export class AuthService {
   login(user: User) {
     console.log(user);
 
-    this.httpClient.post("http://localhost:3000/api/users/login", user)
+    this.httpClient.post(serviceURL + "/login", user)
     .subscribe((res:any) => {
        //console.log('AuthService-login',res);
 

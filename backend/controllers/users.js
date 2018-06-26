@@ -48,7 +48,8 @@ exports.login = (req,res,next) => {
       }
       const token = jwt.sign(
         {email: fetchUser.email, userID: fetchUser._id},
-        "114e0588-fc5f-4a72-86b7-de12b7cc1611-9815641d-606c-4198-b2cc-3ae24953851f",
+        //"114e0588-fc5f-4a72-86b7-de12b7cc1611-9815641d-606c-4198-b2cc-3ae24953851f",
+        process.env.JWT_KEY,
         {expiresIn: '1h'}
       );
       return res.status(200).json({
