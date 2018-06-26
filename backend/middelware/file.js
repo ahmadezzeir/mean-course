@@ -7,6 +7,7 @@ const MIME_TYPE_MAP = {
 const multerStorage = multer.diskStorage({
   destination: (req,file,cb) => {
     //server side validation
+    //console.log(file);
     const isValied = MIME_TYPE_MAP[file.mimetype];
     let error  = new Error('Invalid mime type');
     if(isValied) {

@@ -55,6 +55,15 @@ export class PostsService {
         if(transformedPosts.posts.length == 0 && currentPage > 0) {
           currentPage = currentPage - 1;
           this.getPosts(pageSize, currentPage);
+
+
+
+
+
+
+
+
+
         }
         // console.log(postData);
         this.postsSubject.next({
@@ -68,11 +77,12 @@ export class PostsService {
     return this.postsSubject.asObservable();
   }
 
-  addPost(title: string, content: string, image: File) {
+  addPost(title: string, content: string, image: File, image2: File) {
     const postFormData = new FormData();
     postFormData.append("title", title);
     postFormData.append("content", content);
     postFormData.append("image", image, title);
+    postFormData.append("image1", image2, title);
 
     // const post: Post = { id: null, title: title, content: content };
     this.httpClient
@@ -87,7 +97,8 @@ export class PostsService {
           id: res.post.id,
           title: res.post.title, //title parameter
           content: res.post.content, // content parameter
-          imagePath: res.post.imagePath
+          imagePath: res.post.imagePath,
+          //files: res.post.files
         };
         //post.id = res.newid;
         this.posts.push(post);

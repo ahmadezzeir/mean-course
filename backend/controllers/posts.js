@@ -62,10 +62,12 @@ exports.getDetails = (req, res, next) => {
 
 exports.insert = (req, res, next) => {
   // console.log('start')
+  console.log(req.file);
   const url = req.protocol + "://" + req.get("host");
   // console.log(url);
   // console.log(url + "/images/" + req.file.filename);
   const post = new Post({
+
     title: req.body.title,
     content: req.body.content,
     imagePath: url + "/images/" + req.file.filename,

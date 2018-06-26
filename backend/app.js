@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 //Routes
 const postsRoutes = require("./routes/posts");
 const usersRoutes = require("./routes/users");
+const uploadsRoutes = require("./routes/uploads");
 
 
 
@@ -29,6 +30,7 @@ mongoose
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use("/images", express.static(path.join("backend/images"))); // alow access to image folder
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');
@@ -43,5 +45,6 @@ app.use((req, res, next) => {
 
 app.use("/api/posts", postsRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/uploads", uploadsRoutes);
 
 module.exports = app;

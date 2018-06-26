@@ -6,12 +6,24 @@
       <mat-error *ngIf="form.get('title').invalid">Please enter a post title.</mat-error>
     </mat-form-field>
     <div>
-      <button type="button" mat-stroked-button (click)="filePicker.click()">Image Picker</button>
-      <input type="file" #filePicker (change)="onImagePicked($event)">
+      <button type="button" mat-stroked-button (click)="filePicker.click()">Image Picker 1</button>
+      <input type="file" #filePicker (change)="onImagePicked($event)" multiple="">
     </div>
     <div class="image-preview" *ngIf="imagePreview !== '' && imagePreview && form.get('image').valid">
       <img [src]="imagePreview" [alt]="form.value.title">
     </div>
+    <!-- <div>
+      <button type="button" mat-stroked-button (click)="filePicker1.click()">Image Picker 2</button>
+      <input type="file" #filePicker1 (change)="onImagePicked1($event)">
+    </div>
+    <div class="image-preview" *ngIf="imagePreview1 !== '' && imagePreview1 && form.get('image1').valid">
+      <img [src]="imagePreview1" [alt]="form.value.title">
+    </div> -->
+    <div>
+      <button type="button" mat-stroked-button (click)="filePicker3.click()" >Pick Images</button>
+      <input type="file" #filePicker3 (change)="onImagePicked3($event)" multiple >
+    </div>
+
     <mat-form-field>
       <textarea matInput rows="4" formControlName="content" placeholder="Post Content"></textarea>
       <mat-error *ngIf="form.get('content').invalid">Please enter a post title.</mat-error>
@@ -19,3 +31,9 @@
     <button mat-raised-button color="accent" type="submit">Save Post</button>
   </form>
 </mat-card>
+
+<!-- <input #filePicker3 name="cin" type="file" (change)="fileChangeEvent($event)" placeholder="Upload a file..." multiple/>
+
+<button type="button" class="btn btn-success btn-s" (click)="filePicker3.click()">
+    Upload
+</button> -->
