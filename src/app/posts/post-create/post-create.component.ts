@@ -42,7 +42,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] }),
-      images: new FormControl(null)
+      images: new FormArray([])
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
@@ -150,29 +150,26 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     const formData: any = new FormData();
     const files: Array<File> = this.filesToUpload;
 
-  //   const arr = new FormArray([
-  //     new FormControl(),
-  //     new FormControl(),
-  //     new FormControl(),
-  //     new FormControl(),
-  //     new FormControl(),
-  //     new FormControl(),
-  //     new FormControl()
-  //  ]);
 
-
+    let file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
+    (<FormArray>this.form.get('images')).push(file);
     console.log(files);
 
     for(let i =0; i < files.length; i++){
-        formData.append("uploads[]", files[i], files[i]['name']);
+      console.log('i',i);
+      console.log('i',files[i]);
+        //formData.append("uploads[]", files[i], files[i]['name']);
+        file.setValue(files[i]);
+        (<FormArray>this.form.get('images')).push(file);
+        console.log((this.form.get('images')));
         //arr.ap([files[i]['name']]);
         //this.form.controls['images'].push(new FormControl(files[i]));
 
 
     }
-    this.form.patchValue({ images: formData });
+    //this.form.patchValue({ images: formData });
     console.log('koko',this.form);
-    //return;
+    return;
     //console.log('form data variable :   '+ formData.toString());
     //this.form.patchValue({ images: arr });
     //console.log(this.form.value);

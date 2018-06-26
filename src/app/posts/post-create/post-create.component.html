@@ -19,7 +19,7 @@
     <div class="image-preview" *ngIf="imagePreview1 !== '' && imagePreview1 && form.get('image1').valid">
       <img [src]="imagePreview1" [alt]="form.value.title">
     </div> -->
-    <div>
+    <div >
       <button type="button" mat-stroked-button (click)="filePicker3.click()" >Pick Images</button>
       <input type="file" #filePicker3 (change)="onImagePicked3($event)" multiple >
     </div>
