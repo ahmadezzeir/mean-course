@@ -1,5 +1,5 @@
 git init
 git add *.*
 git commit -m"0.0.1"
-git remote add origin https://ahmadezzeir@posts-dev-api.scm.azurewebsites.net:443/posts-dev-api.git
+git remote add origin https://ahmadezzeir@devapi01.scm.azurewebsites.net:443/devapi01.git
 git push origin master -f

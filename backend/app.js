@@ -28,7 +28,7 @@ mongoose
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use("/images", express.static(path.join("backend/images"))); // alow access to image folder
+app.use("/images", express.static(path.join("images"))); // alow access to image folder
 
 app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');

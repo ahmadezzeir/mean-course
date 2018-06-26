@@ -1,0 +1,7 @@
+ng build --prod -bh=/
+cd dist
+git init
+git add *.*
+git commit -m"0.0.1"
+git remote add origin https://ahmadezzeir@devweb01.scm.azurewebsites.net:443/devweb01.git
+git push origin master -f
