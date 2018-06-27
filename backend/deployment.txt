@@ -1,0 +1,5 @@
+git init
+git add *.*
+git commit -m"0.0.2 - fix images path"
+git remote add origin https://ahmadezzeir@devapi01.scm.azurewebsites.net:443/devapi01.git
+git push origin master -f

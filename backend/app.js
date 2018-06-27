@@ -13,6 +13,7 @@ const uploadsRoutes = require("./routes/uploads");
 
 
 const app = express();
+
 mongoose
   .connect(
     "mongodb://aezzeir:"+process.env.DB_PASSWORD+"@cluster0-shard-00-00-azswa.mongodb.net:27017,cluster0-shard-00-01-azswa.mongodb.net:27017,cluster0-shard-00-02-azswa.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"

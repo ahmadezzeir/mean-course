@@ -42,7 +42,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] }),
-      images: new FormArray([])
+      files: new FormArray([])
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
@@ -151,32 +151,46 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     const files: Array<File> = this.filesToUpload;
 
 
-    let file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
-    (<FormArray>this.form.get('images')).push(file);
+    //let file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
+    //(<FormArray>this.form.get('images')).push(file);
     console.log(files);
 
     for(let i =0; i < files.length; i++){
-      console.log('i',i);
-      console.log('i',files[i]);
+      //console.log('i',i);
+      //console.log('i',files[i]);
+      const file = new FormControl(files[i], { validators: [Validators.required] });
+      console.log(file);
+      (<FormArray>this.form.get('files')).push(file);
         //formData.append("uploads[]", files[i], files[i]['name']);
-        file.setValue(files[i]);
-        (<FormArray>this.form.get('images')).push(file);
-        console.log((this.form.get('images')));
+        //file.setValue(files[i]);
+        //(<FormArray>this.form.get('images')).push(file);
+        //console.log((this.form.get('images')));
         //arr.ap([files[i]['name']]);
         //this.form.controls['images'].push(new FormControl(files[i]));
 
 
     }
     //this.form.patchValue({ images: formData });
-    console.log('koko',this.form);
+    console.log('current form values',this.form);
     return;
     //console.log('form data variable :   '+ formData.toString());
     //this.form.patchValue({ images: arr });
     //console.log(this.form.value);
 
-    this.httpClient.post('http://localhost:3000/api/uploads/uploads', formData)
+    //this.httpClient.post('http://localhost:3000/api/uploads/uploads', formData)
     //.map(files => files.json())
-    .subscribe(files => console.log('files', files));
+    //.subscribe(files => console.log('files', files));
+
+}
+
+onFileAdded() { 
+  const file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
+  (<FormArray>this.form.get('files')).push(file);
+}
+
+onDeleteItem(deletedfileIndex){ 
+  console.log(event);
+  (<FormArray>this.form.get('files')).removeAt(deletedfileIndex);
 
 }
 
