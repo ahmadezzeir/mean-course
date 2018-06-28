@@ -60,12 +60,12 @@ var multerStorage = multer.diskStorage({
     const prefex = (req.userData.userID + "-" + new Date().toDateString() + "-" + req.body.title ).split(' ').join('-');
     //const name =  prefex + "-" +file.originalname.toLowerCase().split(' ').join('-');
     const name = prefex + "-" + file.originalname.toLowerCase().split(' ').join('-');
-    const ext = MIME_TYPE_MAP[file.mimetype];
+    //const ext = MIME_TYPE_MAP_ALL[file.mimetype];
     //name = name + '-' + guid() + '.' + file.mimetype;   
     // console.log('newfile',name);
     //const ext = file.originalname.ext;
     //cb(null, name + '-' + guid() + '.' + file.mimetype);
-    cb(null, name + '.' + ext);
+    cb(null, name);
     //cb(null, name);
     //cb(null, name);
   }

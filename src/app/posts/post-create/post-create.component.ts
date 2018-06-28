@@ -5,9 +5,10 @@ import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
 
 import { PostsService } from "../posts.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
-import { mimeType } from './mime-type.validator';
+import { imagesMimeType } from '../../shared/validators/images-mime-type.validator';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
+import { filesMimeType } from '../../shared/validators/files-mime-type.validator';
 
 @Component({
   selector: "app-post-create",
@@ -38,11 +39,11 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = new FormGroup({
       title: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(3)]
+        validators: [Validators.required, Validators.minLength(2)]
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
-      image: new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] }),
-      invoices: new FormArray([])
+      image: new FormControl(null, { validators: [Validators.required], asyncValidators:[imagesMimeType] }),
+      invoices: new FormArray([],{ validators: [Validators.required] }),
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
@@ -158,7 +159,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     for(let i =0; i < files.length; i++){
       //console.log('i',i);
       //console.log('i',files[i]);
-      const file = new FormControl(files[i], { validators: [Validators.required] });
+      const file = new FormControl(files[i], { validators: [Validators.required], asyncValidators:[filesMimeType] });
       // console.log(file);
       (<FormArray>this.form.get('invoices')).push(file);
       formData.append("invoices", files[i], files[i]['name']);
@@ -170,12 +171,13 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
 
     }
+    console.log('form.get(invoices)',this.form.get('invoices'));
     //this.form.patchValue({ images: formData });
     // console.log('current form values',this.form);
     // return;
     //console.log('form data variable :   '+ formData.toString());
     //this.form.patchValue({ images: arr });
-    console.log(<FormArray>this.form.get('files'));
+    console.log(<FormArray>this.form.get('invoices'));
 
     //this.httpClient.post('http://localhost:3000/api/uploads/uploads', formData)
     //.map(files => files.json())
@@ -184,13 +186,13 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 }
 
 onFileAdded() { 
-  const file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
-  (<FormArray>this.form.get('files')).push(file);
+  const file = new FormControl(null, { validators: [Validators.required], asyncValidators:[imagesMimeType] });
+  (<FormArray>this.form.get('invoices')).push(file);
 }
 
 onDeleteItem(deletedfileIndex){ 
   console.log(event);
-  (<FormArray>this.form.get('files')).removeAt(deletedfileIndex);
+  (<FormArray>this.form.get('invoices')).removeAt(deletedfileIndex);
 
 }
 

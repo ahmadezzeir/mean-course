@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
+import {imagesMimeType} from '../shared/validators/images-mime-type.validator';
 
 @NgModule({
 

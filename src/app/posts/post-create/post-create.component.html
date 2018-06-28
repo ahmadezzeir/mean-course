@@ -19,24 +19,25 @@
     <div class="image-preview" *ngIf="imagePreview1 !== '' && imagePreview1 && form.get('image1').valid">
       <img [src]="imagePreview1" [alt]="form.value.title">
     </div> -->
-    <div >
-      <button type="button" mat-stroked-button (click)="filePicker3.click()" >Pick Images</button>
-      <input type="file" #filePicker3 (change)="onImagePicked3($event)" multiple >
-
+    <div>
+      
+        <button type="button" mat-stroked-button (click)="filePicker3.click()">Pick invoices</button>
+        <input type="file" #filePicker3 (change)="onImagePicked3($event)" multiple>
+        <mat-error *ngIf="form.get('invoices').invalid">Please upload invoices.</mat-error>
+     
       <div formArrayName="invoices">
         <ul>
-          <li *ngFor="let file of this.form.get('invoices').controls;let i=index" >
-            {{file.value.name}} 
+          <li *ngFor="let file of form.get('invoices').controls;let i=index">
+            {{file.value.name}}
             <button mat-mini-fab type="button" (click)="onDeleteItem(i)">
               <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
-              </button>
+            </button>
           </li>
-         
         </ul>
       </div>
 
     </div>
-   
+
     <mat-form-field>
       <textarea matInput rows="4" formControlName="content" placeholder="Post Content"></textarea>
       <mat-error *ngIf="form.get('content').invalid">Please enter a post title.</mat-error>

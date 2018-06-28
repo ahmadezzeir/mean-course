@@ -1,7 +1,7 @@
 import { AbstractControl } from "@angular/forms";
 import { Observable, Observer, of } from "rxjs";
 
-export const mimeType = (
+export const filesMimeType = (
   control: AbstractControl
 ): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
   if(typeof(control.value) === 'string') {
@@ -19,6 +19,7 @@ export const mimeType = (
         for (let i = 0; i < arr.length; i++) {
           header += arr[i].toString(16);
         }
+        console.log('header',header);
         switch (header) {
           case "89504e47":
             isValid = true;
@@ -28,6 +29,10 @@ export const mimeType = (
           case "ffd8ffe2":
           case "ffd8ffe3":
           case "ffd8ffe8":
+          case "25504446":           
+          case "d0cf11e0": 
+          case "49492a0": 
+          case "504b34" :
             isValid = true;
             break;
           default:
