@@ -2,7 +2,11 @@
   "name": "mean-course",
   "version": "0.0.0",
   "scripts": {
+<<<<<<< HEAD
     "api": "nodemon ./backend/server.js"
+=======
+    "api": "nodemon ./server.js"
+>>>>>>> 11-upload-multi-files
   },
   "private": true,
   "dependencies": {

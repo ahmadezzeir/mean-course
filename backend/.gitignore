@@ -4,6 +4,10 @@
 /dist
 /tmp
 /out-tsc
+<<<<<<< HEAD
+=======
+/uploads
+>>>>>>> 11-upload-multi-files
 
 # dependencies
 /node_modules

@@ -1,5 +1,9 @@
 git init
 git add *.*
+<<<<<<< HEAD
 git commit -m"0.0.1"
+=======
+git commit -m"0.0.2 - fix images path"
+>>>>>>> 11-upload-multi-files
 git remote add origin https://ahmadezzeir@devapi01.scm.azurewebsites.net:443/devapi01.git
 git push origin master -f

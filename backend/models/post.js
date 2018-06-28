@@ -6,7 +6,7 @@ const postSchema = mongoose.Schema({
   imagePath: {type: String, required: true},
   createdBy: {type: mongoose.Schema.Types.ObjectId, ref:"User", required:true},
   created: {type: Date, required:true},
-
+  invoces: {type: Array},
   updatedBy: {type: mongoose.Schema.Types.ObjectId, ref:"User",},
   updated: {type: Date, },
 });
