@@ -27,7 +27,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   public isLoading: boolean;
 
   //paging
-  pageSize = 2;
+  pageSize = 20;
   total = 10;
   currentPage: number;
   pageSizeOptions = [1 ,2 ,5, 10, 20 ];
@@ -73,7 +73,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     });
   }
 
-  onChnage(pageEvent: PageEvent) {
+  onChange(pageEvent: PageEvent) {
     // console.log(pageEvent);
     this.isLoading = true;
     this.currentPage = pageEvent.pageIndex + 1;

@@ -1,7 +1,8 @@
 const express = require('express');
 const postsController = require('../controllers/posts');
 const checkAuth = require('../middelware/check-auth');
-const extrackFiles = require('../middelware/file');
+//const extrackFiles = require('../middelware/file');
+const extrackFiles = require('../middelware/many-files');
 const router = express.Router();
 router.get("", postsController.getList);
 router.get("/:id",checkAuth, postsController.getDetails);

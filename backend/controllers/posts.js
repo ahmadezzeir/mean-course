@@ -3,8 +3,8 @@ const Post = require("../models/post");
 
 exports.getList = (req, res, next) => {
   console.log(req.query);
-  const pageSize = +req.query.pageSize;
-  const currentPage = +req.query.currentPage;
+  const pageSize = + req.query.pageSize;
+  const currentPage = + req.query.currentPage;
   const query = Post.find();
   let fetchPosts;
   if(pageSize && currentPage) {
@@ -61,20 +61,35 @@ exports.getDetails = (req, res, next) => {
 
 
 exports.insert = (req, res, next) => {
-  // console.log('start')
-  console.log(req.file);
-  const url = req.protocol + "://" + req.get("host");
-  // console.log(url);
-  // console.log(url + "/images/" + req.file.filename);
-  const post = new Post({
 
+  //console.log('start');
+  //console.log(req.files);
+  //console.log('end');
+  const url = req.protocol + "://" + req.get("host");
+  // console.log('aaaaa',req.files);
+  // console.log(url + "/images/" + req.file.filename);
+  // const uploads = req.files.find(file => file.fieldname === 'uploads[]');
+  // console.log('uploads',uploads);
+  // let urls = [];
+  // for(let i =0; i < uploads.length; i++) {
+  //   //console.log(i);
+  //   //postFormData.append("uploads[]", uploads[i], uploads[i]['name']);
+  //   //uploadsPath.append();
+  //   console.log('counter',i);
+  //   urls.push(uploads[i].filename)
+  // }
+  //console.log('urls', urls);
+  const post = new Post({
     title: req.body.title,
     content: req.body.content,
-    imagePath: url + "/images/" + req.file.filename,
+    imagePath: url + "/uploads/images/" + "" + req.files.find(file => file.fieldname === 'image').filename,
     createdBy: req.userData.userID,
+    invoces: req.files.map(function(file) {
+      return url + "/uploads/invoices/" + file.filename; // or file.originalname
+    }),
     created: new Date(),
   });
-  console.log(post);
+  //console.log('inserted post', post);
   // console.log('*****************');
   // console.log(post);
   // console.log('*****************');
@@ -109,7 +124,7 @@ exports.update = (req, res, next) => {
   let imagePath = req.body.imagePath;
   if (req.file) {
     const url = req.protocol + "://" + req.get("host");
-    imagePath = url + "/images/" + req.file.filename
+    imagePath = url + "/uploads/images/" + req.file.filename
   }
 
   const post = new Post({

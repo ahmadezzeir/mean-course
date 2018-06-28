@@ -5,7 +5,7 @@ var multer = require('multer');
 var storage = multer.diskStorage({
   // destination
   destination: function (req, file, cb) {
-    cb(null, 'backend/uploads/')
+    cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -21,7 +21,10 @@ router.post("/uploads", upload.array("uploads[]", 12), function (req, res) {
 });
 
 router.get("", function (req, res) {
-  console.log('files', req.files);
+  //console.log('files', req.files);
+  res.status(200).json({
+    message:'hi'
+  });
   res.send(req.files);
 });
 

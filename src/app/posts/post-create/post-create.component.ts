@@ -42,7 +42,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] }),
-      files: new FormArray([])
+      invoices: new FormArray([])
     });
 
     this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
@@ -126,7 +126,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
         this.form.value.title,
         this.form.value.content,
         this.form.value.image,
-        this.form.value.images,
+        this.form.value.invoices,
       );
     } else {
       // console.log(this.form.value.content);
@@ -153,15 +153,15 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
     //let file = new FormControl(null, { validators: [Validators.required], asyncValidators:[mimeType] });
     //(<FormArray>this.form.get('images')).push(file);
-    console.log(files);
+    //console.log(files);
 
     for(let i =0; i < files.length; i++){
       //console.log('i',i);
       //console.log('i',files[i]);
       const file = new FormControl(files[i], { validators: [Validators.required] });
-      console.log(file);
-      (<FormArray>this.form.get('files')).push(file);
-        //formData.append("uploads[]", files[i], files[i]['name']);
+      // console.log(file);
+      (<FormArray>this.form.get('invoices')).push(file);
+      formData.append("invoices", files[i], files[i]['name']);
         //file.setValue(files[i]);
         //(<FormArray>this.form.get('images')).push(file);
         //console.log((this.form.get('images')));
@@ -171,11 +171,11 @@ export class PostCreateComponent implements OnInit, OnDestroy {
 
     }
     //this.form.patchValue({ images: formData });
-    console.log('current form values',this.form);
-    return;
+    // console.log('current form values',this.form);
+    // return;
     //console.log('form data variable :   '+ formData.toString());
     //this.form.patchValue({ images: arr });
-    //console.log(this.form.value);
+    console.log(<FormArray>this.form.get('files'));
 
     //this.httpClient.post('http://localhost:3000/api/uploads/uploads', formData)
     //.map(files => files.json())
